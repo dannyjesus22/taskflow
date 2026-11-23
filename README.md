@@ -38,3 +38,22 @@ DELETE /tasks/:id eliminar tarea
 
 La API concreta se elegirá después. Estas rutas son requisitos, no
 direcciones de un servidor ya conectado.
+
+////////////////////////////////////////////
+
+## API de tareas
+
+TaskFlow consulta las tareas a JSONPlaceholder, una API pública de datos de prueba.
+
+- URL exacta: `GET https://jsonplaceholder.typicode.com/todos?userId=2`
+- Parámetro: `userId=2` (constante `userId` en `TaskApiService`). Filtra las tareas del usuario 2.
+- Campos que llegan: `userId`, `id`, `title` y `completed`.
+- Valores que TaskFlow completa por defecto, porque la API no los entrega:
+  - `description`: "Sin descripción (API)"
+  - `priority`: "Sin prioridad (API)"
+- `completed` de la API se convierte en `isCompleted` del modelo `Task`.
+- Marcar una tarea como completada es **local**: solo cambia la copia en memoria.
+  La API de práctica no guarda cambios, así que al reiniciar la app vuelve al valor original.
+
+Recorrido de los datos: `main.dart` → `TasksViewModel` → `RemoteTaskRepository` →
+`TaskApiService` (Dio, GET) → `Task.fromJson()` → `notifyListeners()` → lista y detalle.

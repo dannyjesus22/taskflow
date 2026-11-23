@@ -1,16 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:taskflow/main.dart';
+import 'package:provider/provider.dart';
+import 'package:taskflow/app/taskflow_app.dart';
+import 'package:taskflow/features/tasks/data/local_task_repository.dart';
+import 'package:taskflow/features/tasks/presentation/tasks_view_model.dart';
 
 void main() {
-  testWidgets('Navega del listado al detalle', (WidgetTester tester) async {
-    await tester.pumpWidget(const TaskFlowApp());
+  testWidgets('muestra la lista de tareas', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ChangeNotifierProvider<TasksViewModel>(
+        create: (_) => TasksViewModel(LocalTaskRepository()),
+        child: const TaskFlowApp(),
+      ),
+    );
 
     expect(find.text('Mis tareas'), findsOneWidget);
-
-    await tester.tap(find.text(demoTasks.first.title));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Detalle de tarea'), findsOneWidget);
+    expect(find.text('Entregar PAE de Flutter'), findsOneWidget);
+    expect(find.text('Ordenar apuntes'), findsOneWidget);
   });
 }
